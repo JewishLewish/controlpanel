@@ -93,16 +93,11 @@ def storepage():
         return redirect(url_for("user.login_user"))
     after_request(session, request.environ, True)
 
-    if 'pterodactyl_id' in session:
-        pass
-    else:
+    if 'pterodactyl_id' not in session:
         ptero_id = get_ptero_id(session['email'])
         session['pterodactyl_id'] = ptero_id
 
-    products_local = list(products)
-    for product in products_local:
-        if product['price_link'] is None:
-            products_local.remove(product)
+    products_local = [product for product in products if product['price_link'] is not None]
     return render_template("store.html", products=products_local)
 
 
